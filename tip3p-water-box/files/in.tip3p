@@ -1,0 +1,30 @@
+dimension           3
+units               real
+boundary            p p p
+
+atom_style          full
+pair_style          lj/cut/coul/long 10
+bond_style          harmonic
+angle_style         harmonic
+box                 tilt large
+read_data           data.tip3p
+kspace_style        pppm 1.0e-5
+
+# equilibration
+velocity            all create 300 4928549
+#minimize            0.0 0.0 100 4000
+#reset_timestep      0
+
+fix                 1 all shake 1e-6 200 0 b 1 a 1
+fix                 myNVT all nvt temp 300.0 300.0 100.0
+
+neighbor            2.0 bin
+neigh_modify        delay 0 every 10 check yes
+
+thermo              10
+dump                equildump all atom 10 water.lammpstrj
+timestep            1
+run                 100000
+log                 log.equil
+
+unfix               myNVT
