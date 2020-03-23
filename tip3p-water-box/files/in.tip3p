@@ -19,9 +19,15 @@ neighbor            2.0 bin
 neigh_modify        delay 0 every 10 check yes
 
 thermo              10
-dump                equildump all atom 10 water.lammpstrj
+dump                nvtdump all atom 100 nvt.lammpstrj
 timestep            1
-run                 10000
+run                 5000
 log                 log.equil
 
+undump              nvtdump
 unfix               myNVT
+
+fix                 myNPT all npt temp 300.0 300.0 100.0 aniso 1.0 1.0 100.0
+
+dump                nptdump all atom 100 npt.lammpstrj
+run                 15000
